@@ -1,4 +1,4 @@
-package ma.youssef.bankaccount_management_backend.services;
+package ma.youssef.bankaccount_management_backend.repositories;
 
 import ma.youssef.bankaccount_management_backend.entities.CurrentAccount;
 import org.springframework.data.repository.Repository;

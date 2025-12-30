@@ -1,25 +1,33 @@
 package ma.youssef.bankaccount_management_backend.services;
 
-import ma.youssef.bankaccount_management_backend.entities.BankAccount;
-import ma.youssef.bankaccount_management_backend.entities.CurrentAccount;
-import ma.youssef.bankaccount_management_backend.entities.Customer;
-import ma.youssef.bankaccount_management_backend.entities.SavingAccount;
-import ma.youssef.bankaccount_management_backend.exceptions.BalanceNotSfficientException;
+import ma.youssef.bankaccount_management_backend.dtos.*;
+import ma.youssef.bankaccount_management_backend.exceptions.BalanceNotSufficientException;
 import ma.youssef.bankaccount_management_backend.exceptions.BankAccountNotFoundEcxeption;
 import ma.youssef.bankaccount_management_backend.exceptions.CustomerNotFoundEcxeption;
 
 import java.util.List;
 
 public interface BankAccountService {
-    Customer saveCustomer(Customer customer);
-    CurrentAccount saveCurrentBankAccount(double initialBalance, double overDraft, Long customerId) throws CustomerNotFoundEcxeption;
-    SavingAccount saveSavingBankAccount(double initialBalance, double interestRate, Long customerId) throws CustomerNotFoundEcxeption;
-    List<Customer> listCustomers();
-    BankAccount getBankAccount(String accountId) throws BankAccountNotFoundEcxeption;
-    void debit(String accountId, double amount, String description) throws BankAccountNotFoundEcxeption, BalanceNotSfficientException;
+
+    CustomerDTO saveCustomer(CustomerDTO customerDTO);
+    CurrentBankAccountDTO saveCurrentBankAccount(double initialBalance, double overDraft, Long customerId) throws CustomerNotFoundEcxeption;
+    SavingBankAccountDTO saveSavingBankAccount(double initialBalance, double interestRate, Long customerId) throws CustomerNotFoundEcxeption;
+    List<CustomerDTO> listCustomers();
+    BankAccountDTO getBankAccount(String accountId) throws BankAccountNotFoundEcxeption;
+    void debit(String accountId, double amount, String description) throws BankAccountNotFoundEcxeption, BalanceNotSufficientException;
     void credit(String accountId, double amount, String description) throws BankAccountNotFoundEcxeption;
-    void transfer(String accountIdSource, String accountIdDest, double amount) throws BalanceNotSfficientException, BankAccountNotFoundEcxeption;
+    void transfer(String accountIdSource, String accountIdDest, double amount) throws BalanceNotSufficientException, BankAccountNotFoundEcxeption;
 
 
-    List<BankAccount> bankAccountList();
+    List<BankAccountDTO> bankAccountList();
+
+    CustomerDTO getCustomerDTO(Long customerId) throws CustomerNotFoundEcxeption;
+
+    CustomerDTO updateCustomer(CustomerDTO customerDTO);
+
+    void deleteCustomer(Long customerId);
+
+    List<AccountOperationDTO> accountHistory(String accountId);
+
+    AccountHistoryDTO getAccountHistory(String accountId, int page, int size) throws BankAccountNotFoundEcxeption;
 }

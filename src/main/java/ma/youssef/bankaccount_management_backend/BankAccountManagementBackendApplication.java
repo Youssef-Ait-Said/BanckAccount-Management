@@ -1,15 +1,18 @@
 package ma.youssef.bankaccount_management_backend;
 
+import ma.youssef.bankaccount_management_backend.dtos.BankAccountDTO;
+import ma.youssef.bankaccount_management_backend.dtos.CurrentBankAccountDTO;
+import ma.youssef.bankaccount_management_backend.dtos.CustomerDTO;
+import ma.youssef.bankaccount_management_backend.dtos.SavingBankAccountDTO;
 import ma.youssef.bankaccount_management_backend.entities.*;
 import ma.youssef.bankaccount_management_backend.enums.AccountStatus;
 import ma.youssef.bankaccount_management_backend.enums.OperationType;
-import ma.youssef.bankaccount_management_backend.exceptions.BalanceNotSfficientException;
+import ma.youssef.bankaccount_management_backend.exceptions.BalanceNotSufficientException;
 import ma.youssef.bankaccount_management_backend.exceptions.BankAccountNotFoundEcxeption;
 import ma.youssef.bankaccount_management_backend.exceptions.CustomerNotFoundEcxeption;
 import ma.youssef.bankaccount_management_backend.repositories.AccountOperationRepository;
 import ma.youssef.bankaccount_management_backend.repositories.BankAccountRepository;
 import ma.youssef.bankaccount_management_backend.repositories.CustomerRepository;
-import ma.youssef.bankaccount_management_backend.services.BankAccountService;
 import ma.youssef.bankaccount_management_backend.services.BankAccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -32,27 +35,31 @@ public class BankAccountManagementBackendApplication {
     CommandLineRunner commandLineRunner(BankAccountService bankAccountService) {
         return args -> {
           Stream.of("Hassan", "Youssef" , "Aicha").forEach(name -> {
-              Customer customer = new Customer();
-              customer.setName(name);
-              customer.setEmail(name+"123@gmail.com");
-              bankAccountService.saveCustomer(customer);
+              CustomerDTO customerDTO = new CustomerDTO();
+              customerDTO.setName(name);
+              customerDTO.setEmail(name+"123@gmail.com");
+              bankAccountService.saveCustomer(customerDTO);
           });
-            for (Customer customer : bankAccountService.listCustomers()) {
+            bankAccountService.listCustomers().forEach(customer -> {
                 try {
                     bankAccountService.saveCurrentBankAccount(Math.random() * 80000, 9000, customer.getId());
                     bankAccountService.saveSavingBankAccount(Math.random() * 120000, 5.5, customer.getId());
-                    List<BankAccount> bankAccounts = bankAccountService.bankAccountList();
-                    for (BankAccount bankAccount : bankAccounts) {
-                        for (int i = 0; i < 10 ; i++) {
-                            bankAccountService.credit(bankAccount.getId(), 10000+Math.random()*20000, "Credit");
-                            bankAccountService.debit(bankAccount.getId(), 10000+Math.random()*8000, "Debit");
-
-                        }
-                    }
                 } catch (CustomerNotFoundEcxeption e) {
                     e.printStackTrace();
-                } catch (BankAccountNotFoundEcxeption | BalanceNotSfficientException e) {
-                    e.printStackTrace();
+                }
+            });
+            List<BankAccountDTO> bankAccounts = bankAccountService.bankAccountList();
+            for (BankAccountDTO bankAccount : bankAccounts) {
+                for (int i = 0; i < 10 ; i++) {
+                    String accountId;
+                    if (bankAccount instanceof CurrentBankAccountDTO){
+                        accountId = ((CurrentBankAccountDTO) bankAccount).getId();
+                    } else {
+                        accountId = ((SavingBankAccountDTO) bankAccount).getId();
+                    }
+                    bankAccountService.credit(accountId, 10000+Math.random()*20000, "Credit");
+                    bankAccountService.debit(accountId, 10000+Math.random()*8000, "Debit");
+
                 }
             }
         };
@@ -60,8 +67,7 @@ public class BankAccountManagementBackendApplication {
 
 
     //@Bean
-    CommandLineRunner start(BankAccountRepository repository,
-                            CustomerRepository customerRepository,
+    CommandLineRunner start(CustomerRepository customerRepository,
                             AccountOperationRepository accountOperationRepository,
                             BankAccountRepository bankAccountRepository) {
 
@@ -111,4 +117,4 @@ public class BankAccountManagementBackendApplication {
         };
     }
 
-};
+}
