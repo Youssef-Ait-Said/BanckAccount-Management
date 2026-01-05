@@ -1,0 +1,11 @@
+###
+#GET http://localhost:8085/auth/profile
+#Authorization: Bearer {{$auth.token("")}}
+GET http://localhost:8085/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+###
+POST http://localhost:8085/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username=user2&password=123
