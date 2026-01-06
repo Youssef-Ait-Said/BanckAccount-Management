@@ -1,11 +1,33 @@
 ###
-#GET http://localhost:8085/auth/profile
-#Authorization: Bearer {{$auth.token("")}}
-GET http://localhost:8085/auth/login
-Content-Type: application/x-www-form-urlencoded
+GET http://localhost:8085/customers
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTc2NzcwMjc3NywiaWF0IjoxNzY3NzAyMTc3LCJzY29wZSI6IlVTRVIifQ.st7MyyC_QQObQX4HG-A73zxHelYxDU-kY_Hp3Uo9BOES8BY85yXMLqwAnLx7P_prIHv46jFJP3NSDSe2OBj3zw
+
+###
+GET http://localhost:8085/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc2NzcwMjQxNywiaWF0IjoxNzY3NzAxODE3LCJzY29wZSI6IkFETUlOIFVTRVIifQ.EdqAc_f8Inji8zbTOD3xOyj_Cv8lyPrfq2zVCwW3HFMJ9o093mX_5cLWrwdVOKanBzIp9X-4TzEiVBEBxOibLw
+
 
 ###
 POST http://localhost:8085/auth/login
 Content-Type: application/x-www-form-urlencoded
 
-username=user2&password=123
+username=admin&password=123
+
+###
+POST http://localhost:8085/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username=user1&password=123
+
+
+
+
+###
+POST localhost:8085/customers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTc2NzcwMjc3NywiaWF0IjoxNzY3NzAyMTc3LCJzY29wZSI6IlVTRVIifQ.st7MyyC_QQObQX4HG-A73zxHelYxDU-kY_Hp3Uo9BOES8BY85yXMLqwAnLx7P_prIHv46jFJP3NSDSe2OBj3zw
+
+{
+  "name" : "Yassine", "email" : "Yassine123@gmail.com"
+}
